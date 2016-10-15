@@ -5,6 +5,7 @@ import { ActivitiesPage } from '../pages/activities/activities';
 import { ContactPage } from '../pages/contact/contact';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { TabsPage } from '../pages/tabs/tabs';
+import { ActivityRequestPage } from '../pages/activity-request/activity-request';
 
 import { ActivityProvider } from '../providers/activity-provider';
 
@@ -14,7 +15,8 @@ import { ActivityProvider } from '../providers/activity-provider';
     ActivitiesPage,
     ContactPage,
     DashboardPage,
-    TabsPage
+    TabsPage,
+    ActivityRequestPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -25,7 +27,8 @@ import { ActivityProvider } from '../providers/activity-provider';
     ActivitiesPage,
     ContactPage,
     DashboardPage,
-    TabsPage
+    TabsPage,
+    ActivityRequestPage
   ],
   providers: [ActivityProvider]
 })

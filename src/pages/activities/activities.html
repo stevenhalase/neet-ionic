@@ -6,13 +6,20 @@
   </ion-navbar>
 </ion-header>
 
-<div #map id="map"></div>
+<ion-content class="activities-page">
+  <div #map id="map"></div>
 
-<ion-card>
-  <ion-card-header>
-    Header
-  </ion-card-header>
-  <ion-card-content>
-    The British use the term "header", but the American term "head-shot" the English simply refuse to adopt.
-  </ion-card-content>
-</ion-card>
+  <ion-list>
+    <ion-list-header>
+      Nearby Activities
+    </ion-list-header>
+    <ion-item *ngFor="let activity of this.activities" (click)="selectActivity(activity)">
+      <ion-avatar item-left>
+        <img [src]="activity.user.image">
+      </ion-avatar>
+      <h2>{{activity.description}}</h2>
+      <p>{{activity.user.name}}</p>
+      <ion-badge item-right>{{activity.time}}</ion-badge>
+    </ion-item>
+  </ion-list>
+</ion-content>

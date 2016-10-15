@@ -4,6 +4,7 @@ export class Activity {
           name: string,
           email: string,
           address: string,
+          image: string,
           location: {
             lat: string,
             lng: string
@@ -17,6 +18,7 @@ export class Activity {
             lng: string
           }
         },
-        date: string
+        date: string,
+        time: string
         ){}
 }

@@ -17,9 +17,9 @@ export class ActivityProvider {
 
   }
 
-  getActivities() : Observable<Response> {
-    let activitiesUrl = 'http://neet-api.herokuapp.com/api/activities';
-    return this.http.get(activitiesUrl);
+  getActivities() : Observable<Activity[]> {
+    let activitiesUrl = 'http://localhost:3080/api/activities';
+    return this.http.get(activitiesUrl).map((res:Response) => res.json());
   }
 
 }

@@ -1,10 +1,13 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController, ViewController } from 'ionic-angular';
 
 import {Geolocation} from 'ionic-native';
 
 import { ActivityProvider } from '../../providers/activity-provider';
+import { Activity } from '../../providers/activity';
+
+import { ActivityRequestPage } from '../activity-request/activity-request';
 
 declare var google;
 
@@ -17,15 +20,20 @@ export class ActivitiesPage {
   @ViewChild('map') mapElement: ElementRef;
   map: any;
 
-  constructor(public navCtrl: NavController, private ActivityProvider: ActivityProvider) {
+  activities : Array<Activity>;
+  selectedActivity : Activity;
+
+  constructor(public navCtrl: NavController, private ActivityProvider: ActivityProvider, public modalCtrl: ModalController, public viewCtrl: ViewController) {
 
   }
 
   ionViewDidLoad(){
     this.loadMap();
-    this.ActivityProvider.getActivities().subscribe((response) => {
-      console.log(response)
-    })
+    this.ActivityProvider.getActivities()
+      .subscribe(activities => {
+        this.activities = activities;
+        console.log(this.activities)
+      })
 
   }
 
@@ -33,9 +41,9 @@ export class ActivitiesPage {
 
     Geolocation.getCurrentPosition().then((position) => {
 
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      let latLng : Object = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-      let mapOptions = {
+      let mapOptions : Object = {
         center: latLng,
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -43,35 +51,22 @@ export class ActivitiesPage {
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
-      let marker1 = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        position: {lat: 43.004482, lng: -87.940650}
-      });
+      let markers : Array<Object>;
+      for (let activity of this.activities) {
 
-      let content = "<h4>Information!</h4>";
+        let marker1 : Object = new google.maps.Marker({
+          map: this.map,
+          animation: google.maps.Animation.DROP,
+          position: {
+            lat: parseFloat(activity.place.location.lat),
+            lng: parseFloat(activity.place.location.lng)
+          }
+        });
 
-      this.addInfoWindow(marker1, content);
+        let content : String = `<h4>${activity.user.name}</h4><p>${activity.description}`;
 
-      let marker2 = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        position: {lat: 43.004156, lng: -87.936192}
-      });
-
-      let content2 = "<h4>Information!</h4>";
-
-      this.addInfoWindow(marker2, content2);
-
-      let marker3 = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        position: {lat: 43.000342, lng: -87.937752}
-      });
-
-      let content3 = "<h4>Information!</h4>";
-
-      this.addInfoWindow(marker3, content3);
+        this.addInfoWindow(marker1, content);
+      }
 
     }, (err) => {
       console.log(err);
@@ -89,6 +84,12 @@ export class ActivitiesPage {
       infoWindow.open(this.map, marker);
     });
 
+  }
+
+  selectActivity(activity) {
+    console.log('running')
+    let modal = this.modalCtrl.create(ActivityRequestPage);
+    modal.present();
   }
 
 }
